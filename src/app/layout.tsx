@@ -24,6 +24,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  console.log('SpeedInsights component rendered', <SpeedInsights />);
+
   return (
     <html lang="en">
       <body
