@@ -1,0 +1,38 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 코드 체크아웃
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 2. Node.js 설정 (프로젝트에 맞게 설정)
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      # 3. 의존성 설치
+      - name: Install dependencies
+        run: npm install
+
+      # 4. 테스트 실행 (커버리지 포함)
+      - name: Run tests with coverage
+        run: npm run test -- --coverage
+
+      # 5. Codecov 업로드
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}  # Codecov 토큰을 GitHub Secrets에 저장
