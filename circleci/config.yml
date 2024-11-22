@@ -1,0 +1,36 @@
+version: 2.1
+orbs:
+  cypress: cypress-io/cypress@3  # Cypress orb 사용
+
+jobs:
+  build:
+    docker:
+      - image: cypress/included:10.0.0  # Cypress가 포함된 Docker 이미지
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Build the project
+          command: npm run build
+
+  cypress_run:
+    docker:
+      - image: cypress/included:10.0.0  # Cypress가 포함된 Docker 이미지
+    steps:
+      - checkout
+      - run:
+          name: Run Cypress tests
+          command: npm run start
+      - cypress/run:  # Cypress 테스트 실행
+          start-command: 'npm run start'
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build  # 먼저 build job 실행
+      - cypress_run:
+          requires:
+            - build  # build job이 성공적으로 끝난 후에 cypress_run 실행
